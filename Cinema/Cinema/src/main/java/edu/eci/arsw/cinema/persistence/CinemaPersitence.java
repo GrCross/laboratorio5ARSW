@@ -8,6 +8,8 @@ package edu.eci.arsw.cinema.persistence;
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -53,5 +55,11 @@ public interface CinemaPersitence {
      * @throws  CinemaPersistenceException if there is no such cinema
      */
     public Cinema getCinemaByName(String name) throws CinemaPersistenceException;
+    
+    /**
+     * 
+     * @return cinemas 
+     */
+    public Map<String,Cinema> getCinemas ();
     
 }

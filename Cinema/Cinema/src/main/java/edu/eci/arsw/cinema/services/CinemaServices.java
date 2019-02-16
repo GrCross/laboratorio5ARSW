@@ -10,6 +10,9 @@ import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.persistence.CinemaException;
 import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 import edu.eci.arsw.cinema.persistence.CinemaPersitence;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -25,11 +28,16 @@ public class CinemaServices {
     CinemaPersitence cps = null;
     
     public void addNewCinema(Cinema c){
-        
+        try {
+			cps.saveCinema(c);
+		} catch (CinemaPersistenceException e) {
+			e.printStackTrace();
+		}
     }
     
     public Set<Cinema> getAllCinemas(){
-        return null;
+        Set<Cinema> cinemas= new HashSet<Cinema>(cps.getCinemas().values());
+		return cinemas;
     }
     
     /**
@@ -50,11 +58,22 @@ public class CinemaServices {
     
     
     public void buyTicket(int row, int col, String cinema, String date, String movieName){
-        throw new UnsupportedOperationException("Not supported yet."); 
+        try {
+			cps.buyTicket(row, col, cinema, date, movieName);
+		} catch (CinemaException e) {
+			e.printStackTrace();
+		}
     }
     
     public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    	List<CinemaFunction> funciones = new ArrayList<CinemaFunction>();
+    	try {
+			funciones = cps.getFunctionsbyCinemaAndDate(cinema, date);
+		} catch (CinemaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return funciones;
     }
 
 
