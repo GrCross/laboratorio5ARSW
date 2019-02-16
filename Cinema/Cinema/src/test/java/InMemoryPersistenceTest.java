@@ -2,11 +2,14 @@
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
+import edu.eci.arsw.cinema.persistence.CinemaException;
 import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
+import edu.eci.arsw.cinema.persistence.CinemaPersitence;
 import edu.eci.arsw.cinema.persistence.impl.InMemoryCinemaPersistence;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -47,12 +50,109 @@ public class InMemoryPersistenceTest {
         funciones.add(funcion1);
         funciones.add(funcion2);
         funciones.add(funcion3);
+        funciones.add(funcion4);
         
         Cinema c = new Cinema("CineColombia",funciones);
         
         assertEquals(funciones,c.getFunctions());
         
+        CinemaPersitence cinePersistence = new InMemoryCinemaPersistence();
+        try {
+			cinePersistence.saveCinema(c);
+		} catch (CinemaPersistenceException e) {
+			assertFalse(true);
+			e.printStackTrace();
+		}
+        
+        boolean igual = true;
+        List<CinemaFunction> funcionesProbadas;
+		try {
+			funcionesProbadas = cinePersistence.getFunctionsbyCinemaAndDate("CineColombia","07/05/1999" );
+			for (int i = 0; i < funcionesProbadas.size() && igual; i++) {
+				String cine1=funcionesProbadas.get(i).getMovie().getName();
+				String cine2=funciones.get(i).getMovie().getName();
+				if (!cine1.equals(cine2)) {
+					igual = false;
+				}
+			}
+	        assertTrue(igual);
+		} catch (CinemaException e) {
+			assertFalse(true);
+			e.printStackTrace();
+		}
+        
     }
+    
+    @Test
+    public void deberiaConsultarCinemaPorNombre(){
+    	List<CinemaFunction> funciones = new ArrayList();
+        
+        Movie pelicula1 = new Movie("La favorita","Drama");
+        CinemaFunction funcion = new CinemaFunction(pelicula1,"07/05/1999");
+        
+        Movie pelicula2 = new Movie("La momia","Accion");
+        CinemaFunction funcion1 = new CinemaFunction(pelicula2,"07/05/1999");
+        
+        funciones.add(funcion);
+        funciones.add(funcion1);
+        
+        Cinema c = new Cinema("CineColombia",funciones);
+        CinemaPersitence cinePersistence = new InMemoryCinemaPersistence();
+        try {
+			cinePersistence.saveCinema(c);
+		} catch (CinemaPersistenceException e) {
+			assertFalse(true);
+			e.printStackTrace();
+		}
+        try {
+			Cinema cinemaPrueba = cinePersistence.getCinemaByName("CineColombia");
+			assertEquals(cinemaPrueba.getName(), "CineColombia");
+		} catch (CinemaPersistenceException e) {
+			assertFalse(true);
+			e.printStackTrace();
+		}
+    }
+    
+    @Test
+    public void deberiaPoderComprarUnTiquete(){
+    	List<CinemaFunction> funciones = new ArrayList();
+    	
+    	 Movie pelicula1 = new Movie("La favorita","Drama");
+         CinemaFunction funcion = new CinemaFunction(pelicula1,"07/05/1999");
+         
+         Movie pelicula2 = new Movie("La momia","Accion");
+         CinemaFunction funcion1 = new CinemaFunction(pelicula2,"07/05/1999");
+         
+         funciones.add(funcion);
+         funciones.add(funcion1);
+         
+         Cinema c = new Cinema("CineColombia",funciones);
+         CinemaPersitence cinePersistence = new InMemoryCinemaPersistence();
+         try {
+ 			cinePersistence.saveCinema(c);
+ 		} catch (CinemaPersistenceException e) {
+ 			assertFalse(true);
+ 			e.printStackTrace();
+ 		}
+        
+         try {
+			cinePersistence.buyTicket(1, 1, "CineColombia", "07/05/1999", "La favorita");
+		} catch (CinemaException e) {
+			assertFalse(true);
+			e.printStackTrace();
+		}
+         
+         try {
+ 			cinePersistence.buyTicket(1, 1, "CineColombia", "07/05/1999", "La favorita");
+ 		} catch (CinemaException e) {
+ 			assertTrue(true);
+ 			
+ 		}
+         
+         
+    }
+         
+    
 
     @Test
     public void saveNewAndLoadTest() throws CinemaPersistenceException{

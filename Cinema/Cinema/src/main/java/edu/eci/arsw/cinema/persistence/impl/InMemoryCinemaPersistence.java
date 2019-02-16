@@ -48,15 +48,15 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
                 }
             }
         } catch (Exception e) {
-            throw new UnsupportedOperationException("No fue posible comprar el ticket"); 
+        	throw new CinemaException("Seat booked"); 
         }
-        
-        
         
     }
 
+    
+    
     @Override
-    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) {
+    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) throws CinemaException {
         try {
             Cinema cine=cinemas.get(cinema);
             List<CinemaFunction> funciones = new ArrayList<CinemaFunction>();
@@ -68,7 +68,7 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
             
             return funciones; 
         } catch (Exception e) {
-            throw new UnsupportedOperationException("No se encontraron funciones relacionadas."); 
+        	throw new CinemaException("Cinema not found"); 
         }
         
     }
@@ -76,6 +76,7 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
     @Override
     public void saveCinema(Cinema c) throws CinemaPersistenceException {
         if (cinemas.containsKey(c.getName())){
+            
             throw new CinemaPersistenceException("The given cinema already exists: "+c.getName());
         }
         else{
