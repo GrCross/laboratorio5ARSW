@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.cinema.persistence.impl;
 
+import edu.eci.arsw.cinema.filter.Filter;
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
@@ -17,19 +18,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author cristian
  */
+
 @Service
 public class InMemoryCinemaPersistence implements CinemaPersitence{
-    
+	
+    @Autowired
+	private Filter filter = null;
+	
     private final Map<String,Cinema> cinemas=new HashMap<>();
+    
+    
 
     public InMemoryCinemaPersistence() {
+    	
         //load stub data
+    	
         String functionDate = "2018-12-18 15:30";
         List<CinemaFunction> functions= new ArrayList<>();
         CinemaFunction funct1 = new CinemaFunction(new Movie("SuperHeroes Movie","Action"),functionDate);
@@ -39,7 +51,10 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
         Cinema c=new Cinema("cinemaX",functions);
         cinemas.put("cinemaX", c);
     }    
-
+    
+    
+    
+    
     @Override
     public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
         try {
@@ -77,6 +92,7 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
 
     @Override
     public void saveCinema(Cinema c) throws CinemaPersistenceException {
+    	
         if (cinemas.containsKey(c.getName())){
             
             throw new CinemaPersistenceException("The given cinema already exists: "+c.getName());
@@ -90,10 +106,32 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
     public Cinema getCinemaByName(String name) throws CinemaPersistenceException {
         return cinemas.get(name);
     }
+    
     @Override
     public Map<String,Cinema> getCinemas (){
     	return this.cinemas;
     }
+
+
+
+
+	@Override
+	public List<Movie> filterMovies(String cinema, String fecha, String filter) throws CinemaException {
+		Cinema c = cinemas.get(cinema);
+		
+		this.filter.filter(c, fecha, filter);
+		return null;
+	}
+	
+	
+	
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+    
+ 
+    
+    
     
     
     

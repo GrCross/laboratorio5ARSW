@@ -7,6 +7,8 @@ package edu.eci.arsw.cinema.persistence;
 
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
+import edu.eci.arsw.cinema.model.Movie;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface CinemaPersitence {
+		
     
     /**
      * 
@@ -61,5 +64,15 @@ public interface CinemaPersitence {
      * @return cinemas 
      */
     public Map<String,Cinema> getCinemas ();
+    
+    /**
+     * 
+     * @param cinema
+     * @param fecha
+     * @param filter
+     * @return
+     * @throws CinemaException 
+     */
+    public List<Movie> filterMovies(String cinema, String fecha, String filter) throws CinemaException;
     
 }

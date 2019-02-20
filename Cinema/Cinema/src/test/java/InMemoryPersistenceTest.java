@@ -85,6 +85,7 @@ public class InMemoryPersistenceTest {
     
     @Test
     public void deberiaConsultarCinemaPorNombre(){
+    	
     	List<CinemaFunction> funciones = new ArrayList();
         
         Movie pelicula1 = new Movie("La favorita","Drama");
@@ -112,6 +113,7 @@ public class InMemoryPersistenceTest {
 			e.printStackTrace();
 		}
     }
+    
     
     @Test
     public void deberiaPoderComprarUnTiquete(){
@@ -146,10 +148,7 @@ public class InMemoryPersistenceTest {
  			cinePersistence.buyTicket(1, 1, "CineColombia", "07/05/1999", "La favorita");
  		} catch (CinemaException e) {
  			assertTrue(true);
- 			
  		}
-         
-         
     }
          
     
@@ -201,9 +200,65 @@ public class InMemoryPersistenceTest {
             fail("An exception was expected after saving a second cinema with the same name");
         }
         catch (CinemaPersistenceException ex){
-            
         }
-                
+    }
+    
+    
+    @Test
+    public void deberiaFiltrarLasPeliculasGenero() {
+    	InMemoryCinemaPersistence ipct=new InMemoryCinemaPersistence();
+    	
+    	List<Movie> listaGeneros = new ArrayList<>();
+    	
+    	List<CinemaFunction> funciones = new ArrayList();
         
+        Movie pelicula1 = new Movie("La favorita","Drama");
+        listaGeneros.add(pelicula1);
+        CinemaFunction funcion = new CinemaFunction(pelicula1,"07/05/1999");
+        
+        Movie pelicula2 = new Movie("La momia","Accion");
+        CinemaFunction funcion1 = new CinemaFunction(pelicula2,"07/05/1999");
+        
+        Movie pelicula3 = new Movie("life of PI","Drama");
+        listaGeneros.add(pelicula3);
+        CinemaFunction funcion2 = new CinemaFunction(pelicula3,"07/05/1999");
+        
+        Movie pelicula4 = new Movie("interestelar","Drama");
+        listaGeneros.add(pelicula4);
+        CinemaFunction funcion3 = new CinemaFunction(pelicula4,"07/05/1999");
+        
+        funciones.add(funcion);
+        funciones.add(funcion1);
+        funciones.add(funcion2);
+        funciones.add(funcion3);
+        
+        Cinema c = new Cinema("CineColombia",funciones);
+        
+        try {
+            ipct.saveCinema(c);
+        } catch (CinemaPersistenceException ex) {
+            fail("Cinema persistence failed inserting the first cinema.");
+        }
+        List<Movie> pruebaFiltro = null; 
+        
+        try {
+        	pruebaFiltro = ipct.filterMovies("CineColombia", "07/05/1999", "Drama");
+		} catch (CinemaException e) {
+			e.printStackTrace();
+		} catch (NullPointerException es) {
+			es.printStackTrace();
+		}
+        
+        boolean flag = true;
+        if(listaGeneros.size() == pruebaFiltro.size()) {
+        	for (int i = 0 ; i <listaGeneros.size() && flag; i++) {
+        		Movie movie1 = listaGeneros.get(i);
+        		Movie movie2 = pruebaFiltro.get(i);
+        		if(!movie1.getName().equals(movie2.getName())) {
+        			flag = false;
+        		}
+    		}
+        }
+        assertTrue(flag);
     }
 }

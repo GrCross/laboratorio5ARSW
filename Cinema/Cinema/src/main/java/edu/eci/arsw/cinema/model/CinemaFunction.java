@@ -9,6 +9,7 @@ import edu.eci.arsw.cinema.persistence.CinemaException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,6 +63,16 @@ public class CinemaFunction {
         this.date = date;
     }
     
+    public int freeSeats() {
+    	int count = 0;
+    	for (int i = 0; i < seats.size(); i++) {
+    		for (int j = 0; j < seats.get(i).size(); j++) {
+    			if(seats.get(i).get(j)) count++;
+    		}
+		}
+    	
+    	return count;
+    }
     
     
     
