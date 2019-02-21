@@ -14,7 +14,7 @@ import edu.eci.arsw.cinema.model.Movie;
 import edu.eci.arsw.cinema.persistence.CinemaException;
 import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 
-@Service
+//@Service
 public class filterByGenre implements Filter {
 	
 	public  filterByGenre() {

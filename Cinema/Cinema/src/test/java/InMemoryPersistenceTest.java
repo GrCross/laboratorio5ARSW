@@ -1,4 +1,6 @@
 
+import edu.eci.arsw.cinema.filter.filterByAvailability;
+import edu.eci.arsw.cinema.filter.filterByGenre;
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
@@ -208,9 +210,12 @@ public class InMemoryPersistenceTest {
     public void deberiaFiltrarLasPeliculasGenero() {
     	InMemoryCinemaPersistence ipct=new InMemoryCinemaPersistence();
     	
+    	
+    	ipct.setFilter(new filterByGenre());
+    	
     	List<Movie> listaGeneros = new ArrayList<>();
     	
-    	List<CinemaFunction> funciones = new ArrayList();
+    	List<CinemaFunction> funciones = new ArrayList<>();
         
         Movie pelicula1 = new Movie("La favorita","Drama");
         listaGeneros.add(pelicula1);
@@ -243,6 +248,91 @@ public class InMemoryPersistenceTest {
         
         try {
         	pruebaFiltro = ipct.filterMovies("CineColombia", "07/05/1999", "Drama");
+        	 System.out.println(pruebaFiltro.size());
+             System.out.println("holaaaaaaap");
+		} catch (CinemaException e) {
+			e.printStackTrace();
+		} catch (NullPointerException es) {
+			es.printStackTrace();
+		}
+        boolean flag = true;
+        if(listaGeneros.size() == pruebaFiltro.size()) {
+        	for (int i = 0 ; i <listaGeneros.size() && flag; i++) {
+        		Movie movie1 = listaGeneros.get(i);
+        		Movie movie2 = pruebaFiltro.get(i);
+        		if(!movie1.getName().equals(movie2.getName())) {
+        			flag = false;
+        		}
+    		}
+        }
+        assertTrue(flag);
+    }
+    
+    @Test
+    public void deberiaFiltrarLasPeliculasDisponibilidad() {
+    	InMemoryCinemaPersistence ipct=new InMemoryCinemaPersistence();
+    	
+    	ipct.setFilter(new filterByAvailability());
+    	
+    	List<Movie> listaGeneros = new ArrayList<>();
+    	
+    	List<CinemaFunction> funciones = new ArrayList<>();
+    	
+    	Movie pelicula4 = new Movie("interestelar","Drama");
+        listaGeneros.add(pelicula4);
+        CinemaFunction funcion3 = new CinemaFunction(pelicula4,"07/05/1999");
+        
+        Movie pelicula3 = new Movie("life of PI","Drama");
+        listaGeneros.add(pelicula3);
+        CinemaFunction funcion2 = new CinemaFunction(pelicula3,"07/05/1999");
+        
+        Movie pelicula2 = new Movie("La momia","Accion");
+        CinemaFunction funcion1 = new CinemaFunction(pelicula2,"07/05/1999");
+        
+        
+        Movie pelicula1 = new Movie("La favorita","Drama");
+        //listaGeneros.add(pelicula1);
+        CinemaFunction funcion = new CinemaFunction(pelicula1,"07/05/1999");
+        
+      
+        
+        funciones.add(funcion);
+        funciones.add(funcion1);
+        funciones.add(funcion2);
+        funciones.add(funcion3);
+        
+        Cinema c = new Cinema("CineColombia",funciones);
+        
+        
+        
+        try {
+            ipct.saveCinema(c);
+        } catch (CinemaPersistenceException ex) {
+            fail("Cinema persistence failed inserting the first cinema.");
+        }
+        List<Movie> pruebaFiltro = null; 
+        
+        try {
+			ipct.buyTicket(1, 1, "CineColombia", "07/05/1999", "La favorita");
+			ipct.buyTicket(1, 2, "CineColombia", "07/05/1999", "La favorita");
+			ipct.buyTicket(1, 3, "CineColombia", "07/05/1999", "La favorita");
+			ipct.buyTicket(1, 4, "CineColombia", "07/05/1999", "La favorita");
+			
+			ipct.buyTicket(1, 1, "CineColombia", "07/05/1999", "La momia");
+			ipct.buyTicket(1, 2, "CineColombia", "07/05/1999", "La momia");
+			ipct.buyTicket(1, 3, "CineColombia", "07/05/1999", "La momia");
+			
+			ipct.buyTicket(1, 2, "CineColombia", "07/05/1999", "life of PI");
+			ipct.buyTicket(1, 3, "CineColombia", "07/05/1999", "life of PI");
+			
+		} catch (CinemaException e1) {
+			e1.printStackTrace();
+		}
+        
+        try {
+        	pruebaFiltro = ipct.filterMovies("CineColombia", "07/05/1999", "81");
+        	 System.out.println(pruebaFiltro.size());
+             System.out.println("holaaaaaaap");
 		} catch (CinemaException e) {
 			e.printStackTrace();
 		} catch (NullPointerException es) {

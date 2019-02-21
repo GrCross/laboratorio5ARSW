@@ -3,10 +3,13 @@ package edu.eci.arsw.cinema.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
 
+@Service
 public class filterByAvailability implements Filter{
 
 	@Override

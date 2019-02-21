@@ -7,6 +7,7 @@ package edu.eci.arsw.cinema.services;
 
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
+import edu.eci.arsw.cinema.model.Movie;
 import edu.eci.arsw.cinema.persistence.CinemaException;
 import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 import edu.eci.arsw.cinema.persistence.CinemaPersitence;
@@ -18,12 +19,20 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author cristian
  */
+@Configuration
 public class CinemaServices {
+	
+	public CinemaServices() {
+	
+	}
+	
     @Autowired
     CinemaPersitence cps = null;
     
@@ -74,6 +83,12 @@ public class CinemaServices {
 			e.printStackTrace();
 		}
     	return funciones;
+    }
+    
+    public List<Movie> filterMovies(String cinema, String fecha, String filter) throws CinemaException{
+
+		return cps.filterMovies(cinema, fecha, filter);
+    	
     }
 
 

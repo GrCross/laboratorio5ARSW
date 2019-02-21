@@ -118,9 +118,8 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
 	@Override
 	public List<Movie> filterMovies(String cinema, String fecha, String filter) throws CinemaException {
 		Cinema c = cinemas.get(cinema);
-		
-		this.filter.filter(c, fecha, filter);
-		return null;
+		List<Movie> movies= this.filter.filter(c, fecha, filter);
+		return movies;
 	}
 	
 	

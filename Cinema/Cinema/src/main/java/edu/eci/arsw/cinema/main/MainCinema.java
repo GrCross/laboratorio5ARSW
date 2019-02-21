@@ -3,6 +3,9 @@ package edu.eci.arsw.cinema.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.model.Movie;
@@ -13,9 +16,13 @@ public class MainCinema {
 	
 	public static CinemaServices cinemaService;
 	
+	
+	
 	public static void main(String[] args) {
 		
-		cinemaService = new CinemaServices();
+		ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+		cinemaService = ac.getBean(CinemaServices.class);
+		
 		
 		System.out.println("---------------agregar nuevo cinema-----------------");
 		List<CinemaFunction> funciones = new ArrayList();
@@ -54,8 +61,22 @@ public class MainCinema {
         System.out.println("--------------- Comprar tiquetes--------------");
         
         cinemaService.buyTicket(1, 1, "CineColombia", "07/05/1999", "La favorita");
+        cinemaService.buyTicket(1, 2, "CineColombia", "07/05/1999", "La favorita");
+        cinemaService.buyTicket(1, 3, "CineColombia", "07/05/1999", "La favorita");
+        cinemaService.buyTicket(1, 4, "CineColombia", "07/05/1999", "La favorita");
         
+        System.out.println("-*-------------------- Filtra por disponibilidad--------------------");
+        List<Movie>movies = null;
+        try {
+			movies  = cinemaService.filterMovies("CineColombia", "07/05/1999", "82");
+		} catch (CinemaException e) {
+			e.printStackTrace();
+		}
         
+        for (Movie m : movies) {
+			System.out.println(m.getName()+" "+m.getGenre());
+		}
+   
         
 	}
 	
